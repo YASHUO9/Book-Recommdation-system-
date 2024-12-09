@@ -4,11 +4,11 @@ from src.Machine_Recommendation.components.data_transformation import DataTransf
 
 from src.Machine_Recommendation.components.model_trainer import ModelTrainer
 
-from src.Machine_Recommendation.components.model_evaluation import ModelEvaluation
 
 
 # import dagshub
 # dagshub.init(repo_owner='Yash-Pathak', repo_name='Mobile-Price-Prediction', mlflow=True)
+
 
 import sys
 from src.Machine_Recommendation.logger import logging
@@ -52,11 +52,12 @@ class TrainingPipeline:
 # dagshub.init(repo_owner='Yash-Pathak', repo_name='Mobile-Price-Prediction', mlflow=True)
 obj =DataIngestion()
 train_data_path,test_data_path=obj.initiate_data_ingestion()
-train_arr,test_arr = DataTransformation().initialize_data_transformation(train_data_path,test_data_path)
+
+train_array,test_array = DataTransformation().transform_data(train_data_path,test_data_path)
+
 obj = ModelTrainer()
-obj.initate_model_training(train_arr,test_arr)
-obj = ModelEvaluation()
-obj.initiate_model_evaluation(train_arr,test_arr)       
+obj.initiate_model_training()
+       
         
         
         

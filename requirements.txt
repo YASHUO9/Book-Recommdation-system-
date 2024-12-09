@@ -6,3 +6,18 @@ seaborn
 matplotlib
 scipy
 
+pandas
+scikit-learn
+numpy
+seaborn
+ipykernel
+Flask
+#this is more stable version
+
+
+
+
+matplotlib
+
+# dagshub mlflow
+-e .
