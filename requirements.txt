@@ -5,7 +5,7 @@ numpy
 seaborn
 matplotlib
 scipy
-
+streamlit
 pandas
 scikit-learn
 numpy

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from src.Machine_Recommendation.exception import customexception
 from src.Machine_Recommendation.logger import logging
-from src.Machine_Recommendation.utils.utils import save_object
+
 
 @dataclass
 class DataTransformationConfig:
@@ -43,6 +43,7 @@ class DataTransformation:
             
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
+           
 
             logging.info("Read train 1  and test data complete")
             logging.info(f'Train Dataframe Head : \n{train_df.head().to_string()}')
@@ -51,6 +52,7 @@ class DataTransformation:
             # Validate the data
             self._validate_data(train_df)
             self._validate_data(test_df)
+            
 
             # Convert to dense arrays (if necessary) 
             # - This might be removed if your data is always dense

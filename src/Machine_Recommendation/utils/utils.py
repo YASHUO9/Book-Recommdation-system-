@@ -1,7 +1,7 @@
 import os
 import sys
 import pickle
-
+import numpy as np
 from src.Machine_Recommendation.logger import logging
 from src.Machine_Recommendation.exception import customexception
 
@@ -10,6 +10,12 @@ from sklearn.metrics import silhouette_score
 
 import os
 import pickle
+
+
+model = pickle.load(open('artifacts/model.pkl','rb'))
+book_name = pickle.load(open('artifacts/book_name.pkl','rb'))
+final_rating = pickle.load(open('artifacts/final_rating.pkl','rb'))
+book_pivot = pickle.load(open('artifacts/book_pivot.pkl','rb'))
 
 def save_object(file_path, obj):
     """
@@ -87,3 +93,39 @@ def load_object(file_path):
     except Exception as e:
         logging.info(f'Exception occurred in load_object: {e}')
         raise customexception(e, sys) from e
+
+
+
+
+
+
+def recommend_book(book_name,book_pivot):
+    book_id = np.where(book_pivot.index == book_name)[0][0]
+
+
+    # Prediction for a specific data point
+    data_point = book_pivot.iloc[book_id, :].values.reshape(1, -1)
+    cluster_label = model.predict(data_point)
+
+
+    # Get all points belonging to the same cluster
+    labels_all = model.predict(book_pivot)
+
+    # Get the indices of all rows in the same cluster
+    same_cluster_indices = np.where(labels_all == cluster_label)[0]
+
+    # Retrieve the original row IDs from the DataFrame based on the indices
+    original_ids = book_pivot.index[same_cluster_indices]
+    book_list = []
+    for idx in original_ids[:6]:  # Get at least 6 IDs
+        # Ensure that idx is used as an index in book_pivot, not as a positional index
+      
+      book_list.append(idx)
+    # same_cluster_indices
+    poster_url = []
+    for Title in original_ids[0:6]:
+        url_value = final_rating[final_rating['Book-Title'] == Title]['Image-URL-L'].values[0]
+        poster_url.append(url_value)
+        
+    
+    return book_list, poster_url

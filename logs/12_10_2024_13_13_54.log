@@ -1,0 +1,3 @@
+[2024-12-10 13:13:56,267] 26 root - INFO - data ingestion started
+[2024-12-10 13:13:58,551] 34 root - INFO -  i have read dataset as a df
+[2024-12-10 13:13:58,935] 60 root - INFO - exception during occured at data ingestion stage

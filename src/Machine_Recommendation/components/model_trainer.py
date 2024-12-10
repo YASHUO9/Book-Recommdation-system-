@@ -13,7 +13,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import   silhouette_score
 from scipy.sparse import csr_matrix
 # Base Clustering Model Class
-
+import pickle
 
 class BaseClustering:
     def __init__(self, name):
@@ -76,8 +76,11 @@ class KMeansClustering(BaseClustering):
 @dataclass 
 class ModelTrainerConfig:
     trained_model_file_path = os.path.join('artifacts','model.pkl')
-    raw_data_path=(Path(os.path.join("artifacts","raw.csv")))
-    # raw_data_path = os.path.join('notebooks\\data','raw.csv')
+    raw_data_path=(Path(os.path.join("artifacts","book_pivoted.csv")))
+    book_name_path = os.path.join('artifacts','book_name.pkl')
+    final_rating_path = os.path.join('artifacts','final_rating.pkl')
+    book_pivot_path = os.path.join('artifacts','book_pivot.pkl')
+   
 
 class ModelTrainer:
     def __init__(self):
@@ -91,6 +94,8 @@ class ModelTrainer:
             # Set 'Title' as the index if it isn't already
             if data.index.name != 'Title':
                 data.set_index('Title', inplace=True)
+            book_name = data.index
+            book_pivoted = data 
             book_sparse = csr_matrix(data)
             X_train, X_test = train_test_split(book_sparse, test_size=0.2, random_state=42)
             logging.info('Splitting Dependent and Independent variables from train and test data')
@@ -102,12 +107,17 @@ class ModelTrainer:
             test_score = kmeans_model.evaluate( X_test)  # Use test_array
             print(f"K-Means Best Parameters: {kmeans_model.best_params}")
             print(f"K-Means Silhouette Score on Test Set: {test_score}")
-
+            final_rating=pd.read_csv(Path(os.path.join("artifacts","final_rating.csv")))
             # Save the trained model
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path, 
                 obj=kmeans_model.best_model
+              
+                
             )
+            save_object(self.model_trainer_config.book_name_path, book_name)
+            save_object(self.model_trainer_config.final_rating_path, final_rating)
+            save_object(self.model_trainer_config.book_pivot_path, book_pivoted)
 
         except Exception as e:
             logging.info('Exception occurred at Model Training')
